@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Admin Dashboard – ShikhoBD</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+  
+  <style>
+    input, select, textarea { font-size: 16px !important; }
+    .manage-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .mi-thumb img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .mi-actions button {
+      margin-left: 8px;
+      padding: 8px 12px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body class="admin-page">
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <i class="fa-solid fa-book-open-reader"></i>
+    <span>ShikhoBD</span>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="snav active" data-section="dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+    <a href="#" class="snav" data-section="post"><i class="fa-solid fa-plus-circle"></i> Post Question</a>
+    <a href="#" class="snav" data-section="manage"><i class="fa-solid fa-list-check"></i> Manage Q&A</a>
+    <a href="index.html" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Site</a>
+  </nav>
+  <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+</aside>
+
+<!-- Topbar -->
+<div class="admin-topbar">
+  <button class="sidebar-toggle" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+  <div class="topbar-title" id="topbarTitle">Dashboard</div>
+  <div class="admin-user">
+    <i class="fa-solid fa-user-shield"></i>
+    <span id="adminUserEmail">Admin</span>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="admin-main" id="adminMain">
+
+  <!-- Dashboard -->
+  <section class="admin-section active" id="sec-dashboard">
+    <div class="dash-welcome">
+      <h2>Welcome back, Admin! <i class="fa-solid fa-hand-wave"></i></h2>
+      <p>Here's what's happening on ShikhoBD today.</p>
+    </div>
+    <div class="dash-stats">
+      <div class="dstat green"><div class="dstat-icon"><i class="fa-solid fa-circle-question"></i></div><div><span id="totalQ">0</span><small>Total Questions</small></div></div>
+      <div class="dstat blue"><div class="dstat-icon"><i class="fa-solid fa-graduation-cap"></i></div><div><span id="sscCount">0</span><small>SSC</small></div></div>
+      <div class="dstat orange"><div class="dstat-icon"><i class="fa-solid fa-school"></i></div><div><span id="hscCount">0</span><small>HSC</small></div></div>
+      <div class="dstat purple"><div class="dstat-icon"><i class="fa-solid fa-university"></i></div><div><span id="admCount">0</span><small>Admission</small></div></div>
+    </div>
+  </section>
+
+  <!-- Post Question -->
+  <section class="admin-section" id="sec-post">
+    <div class="section-card">
+      <h2><i class="fa-solid fa-plus-circle"></i> Post New Question</h2>
+      <p class="form-note">Upload on ImgBB.com → Paste direct links</p>
+
+      <div id="postSuccess" class="alert-success" style="display:none;">✅ Question posted successfully!</div>
+      <div id="postError" class="alert-error" style="display:none;"></div>
+
+      <div class="form-group"><label>Title *</label><input type="text" id="qTitle" placeholder="Question title"></div>
+      <div class="form-group"><label>Subject *</label><input type="text" id="qSubject" placeholder="e.g. Physics"></div>
+      <div class="form-group"><label>Category *</label>
+        <select id="qCategory">
+          <option value="">Select Category</option>
+          <option value="ssc">SSC</option>
+          <option value="hsc">HSC</option>
+          <option value="admission">Admission</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Question Image Link *</label><input type="url" id="qImgLink"></div>
+      <div class="form-group"><label>Answer Image Link *</label><input type="url" id="aImgLink"></div>
+
+      <div class="form-actions">
+        <button class="btn-primary" id="postBtn"><i class="fa-solid fa-paper-plane"></i> Post Question</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Manage Section -->
+  <section class="admin-section" id="sec-manage">
+    <div class="manage-header">
+      <h2><i class="fa-solid fa-list-check"></i> Manage Questions</h2>
+      <div class="manage-filters">
+        <button class="filter-btn active" data-f="all">All</button>
+        <button class="filter-btn" data-f="ssc">SSC</button>
+        <button class="filter-btn" data-f="hsc">HSC</button>
+        <button class="filter-btn" data-f="admission">Admission</button>
+      </div>
+    </div>
+    <div id="manageList" class="manage-list"></div>
+  </section>
+</main>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box">
+    <button class="modal-close" id="editClose">✕</button>
+    <h3>Edit Question</h3>
+    <input type="hidden" id="editDocId">
+    <input type="text" id="editTitle" placeholder="Title">
+    <input type="text" id="editSubject" placeholder="Subject">
+    <select id="editCategory">
+      <option value="ssc">SSC</option>
+      <option value="hsc">HSC</option>
+      <option value="admission">Admission</option>
+    </select>
+    <input type="url" id="editQLink" placeholder="Question Image Link">
+    <input type="url" id="editALink" placeholder="Answer Image Link">
+    <div class="form-actions">
+      <button id="editCancelBtn">Cancel</button>
+      <button id="saveEditBtn">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <h3>Delete Question?</h3>
+    <p>This action cannot be undone.</p>
+    <input type="hidden" id="deleteDocId">
+    <div class="form-actions">
+      <button id="deleteCancelBtn">Cancel</button>
+      <button id="confirmDeleteBtn" class="btn-danger">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js" type="module"></script>
+
+<script type="module">
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  window.addEventListener("firebaseReady", () => {
+    const db = window._db;
+    const fs = window._fsModules;
+
+    if (!db || !fs) return alert("Firebase not loaded. Check app.js");
+
+    const { collection, addDoc, getDocs, doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp, onSnapshot } = fs;
+    const auth = getAuth(window._firebaseApp);
+
+    function getImageUrl(link) { return link ? link.trim() : ""; }
+
+    onAuthStateChanged(auth, user => {
+      if (!user) return window.location.href = "admin-login.html";
+      document.getElementById("adminUserEmail").textContent = user.email;
+      loadDashboard();
+      loadManage("all");
+    });
+
+    // Sidebar Navigation
+    document.querySelectorAll(".snav").forEach(btn => {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        document.querySelectorAll(".snav").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".admin-section").forEach(s => s.classList.remove("active"));
+        document.getElementById("sec-" + btn.dataset.section).classList.add("active");
+        document.getElementById("topbarTitle").textContent = btn.textContent.trim();
+      });
+    });
+
+    // Dashboard
+    async function loadDashboard() {
+      const snap = await getDocs(collection(db, "questions"));
+      const docs = snap.docs.map(d => d.data());
+      document.getElementById("totalQ").textContent = docs.length;
+      document.getElementById("sscCount").textContent = docs.filter(d => d.category === "ssc").length;
+      document.getElementById("hscCount").textContent = docs.filter(d => d.category === "hsc").length;
+      document.getElementById("admCount").textContent = docs.filter(d => d.category === "admission").length;
+    }
+
+    // Post Question
+    document.getElementById("postBtn").addEventListener("click", async () => {
+      const title = document.getElementById("qTitle").value.trim();
+      const subject = document.getElementById("qSubject").value.trim();
+      const category = document.getElementById("qCategory").value;
+      const qImg = document.getElementById("qImgLink").value.trim();
+      const aImg = document.getElementById("aImgLink").value.trim();
+
+      const successDiv = document.getElementById("postSuccess");
+      const errorDiv = document.getElementById("postError");
+
+      successDiv.style.display = "none";
+      errorDiv.style.display = "none";
+
+      if (!title || !subject || !category || !qImg || !aImg) {
+        errorDiv.textContent = "Please fill all required fields!";
+        errorDiv.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById("postBtn");
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Posting...';
+
+      try {
+        await addDoc(collection(db, "questions"), {
+          title, subject, category,
+          questionImg: getImageUrl(qImg),
+          answerImg: getImageUrl(aImg),
+          createdAt: serverTimestamp()
+        });
+
+        successDiv.style.display = "block";
+        document.getElementById("qTitle").value = "";
+        document.getElementById("qSubject").value = "";
+        document.getElementById("qCategory").value = "";
+        document.getElementById("qImgLink").value = "";
+        document.getElementById("aImgLink").value = "";
+
+        loadDashboard();
+        loadManage("all");
+      } catch (e) {
+        errorDiv.textContent = "Error: " + e.message;
+        errorDiv.style.display = "block";
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Post Question';
+    });
+
+    // ==================== MANAGE WITH EDIT & DELETE ====================
+    function loadManage(filter) {
+      const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
+      onSnapshot(q, (snap) => {
+        let docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        if (filter !== "all") docs = docs.filter(d => d.category === filter);
+
+        const html = docs.map(d => `
+          <div class="manage-item">
+            <div class="mi-thumb"><img src="${getImageUrl(d.questionImg)}" alt=""></div>
+            <div class="mi-info">
+              <strong>${d.title || 'Untitled'}</strong><br>
+              <small>${d.subject || ''} • ${d.category?.toUpperCase()}</small>
+            </div>
+            <div class="mi-actions">
+              <button class="edit-btn" data-id="${d.id}">✏️</button>
+              <button class="del-btn" data-id="${d.id}">🗑️</button>
+            </div>
+          </div>
+        `).join("");
+
+        document.getElementById("manageList").innerHTML = html || "<p>No questions found.</p>";
+
+        // Attach Edit & Delete
+        document.querySelectorAll(".edit-btn").forEach(btn => {
+          btn.onclick = () => openEdit(btn.dataset.id, docs);
+        });
+        document.querySelectorAll(".del-btn").forEach(btn => {
+          btn.onclick = () => openDelete(btn.dataset.id);
+        });
+      });
+    }
+
+    // Edit Modal
+    function openEdit(id, docs) {
+      const item = docs.find(d => d.id === id);
+      if (!item) return;
+      document.getElementById("editDocId").value = id;
+      document.getElementById("editTitle").value = item.title || "";
+      document.getElementById("editSubject").value = item.subject || "";
+      document.getElementById("editCategory").value = item.category || "ssc";
+      document.getElementById("editQLink").value = item.questionImg || "";
+      document.getElementById("editALink").value = item.answerImg || "";
+      document.getElementById("editModal").classList.add("open");
+    }
+
+    document.getElementById("editClose").onclick = () => document.getElementById("editModal").classList.remove("open");
+    document.getElementById("editCancelBtn").onclick = () => document.getElementById("editModal").classList.remove("open");
+
+    document.getElementById("saveEditBtn").onclick = async () => {
+      const id = document.getElementById("editDocId").value;
+      try {
+        await updateDoc(doc(db, "questions", id), {
+          title: document.getElementById("editTitle").value.trim(),
+          subject: document.getElementById("editSubject").value.trim(),
+          category: document.getElementById("editCategory").value,
+          questionImg: getImageUrl(document.getElementById("editQLink").value),
+          answerImg: getImageUrl(document.getElementById("editALink").value)
+        });
+        alert("✅ Changes saved successfully!");
+        document.getElementById("editModal").classList.remove("open");
+        loadManage("all");
+      } catch (e) {
+        alert("Save failed: " + e.message);
+      }
+    };
+
+    // Delete
+    function openDelete(id) {
+      document.getElementById("deleteDocId").value = id;
+      document.getElementById("deleteModal").classList.add("open");
+    }
+
+    document.getElementById("deleteCancelBtn").onclick = () => document.getElementById("deleteModal").classList.remove("open");
+
+    document.getElementById("confirmDeleteBtn").onclick = async () => {
+      const id = document.getElementById("deleteDocId").value;
+      try {
+        await deleteDoc(doc(db, "questions", id));
+        document.getElementById("deleteModal").classList.remove("open");
+        alert("✅ Deleted successfully!");
+        loadDashboard();
+        loadManage("all");
+      } catch (e) {
+        alert("Delete failed: " + e.message);
+      }
+    };
+
+    // Initial Load
+    loadManage("all");
+  });
+</script>
+</body>
+      </html>
