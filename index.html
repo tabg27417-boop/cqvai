@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CQ Vai SSC | HSC | Admission</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <i class="fa-solid fa-book-open-reader"></i>
+      <span>CQVai</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="active"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="index.html?cat=ssc"><i class="fa-solid fa-graduation-cap"></i> SSC</a>
+      <a href="index.html?cat=hsc"><i class="fa-solid fa-school"></i> HSC</a>
+      <a href="index.html?cat=admission"><i class="fa-solid fa-university"></i> Admission</a>
+      <a href="admin-login.html" class="admin-btn"><i class="fa-solid fa-lock"></i> Admin</a>
+    </div>
+    <button class="hamburger" id="hamburger"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+    <a href="index.html?cat=ssc"><i class="fa-solid fa-graduation-cap"></i> SSC</a>
+    <a href="index.html?cat=hsc"><i class="fa-solid fa-school"></i> HSC</a>
+    <a href="index.html?cat=admission"><i class="fa-solid fa-university"></i> Admission</a>
+    <a href="admin-login.html"><i class="fa-solid fa-lock"></i> Admin</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg-shapes">
+    <div class="shape s1"></div>
+    <div class="shape s2"></div>
+    <div class="shape s3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fa-solid fa-star"></i> Bangladesh's Premier Q&A Platform</div>
+    <h1>Ace Your<br/><span class="accent">SSC · HSC · Admission</span><br/>Exams</h1>
+    <p>Expert question-answer sets with detailed solutions.</p>
+    <div class="hero-btns">
+      <a href="#questions" class="btn-primary"><i class="fa-solid fa-search"></i> Browse Questions</a>
+      <a href="index.html?cat=ssc" class="btn-outline"><i class="fa-solid fa-play"></i> Start Now</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span id="statQuestions">0</span><small>Questions</small></div>
+      <div class="stat"><span>3</span><small>Categories</small></div>
+      <div class="stat"><span>100%</span><small>Free</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTIONS SECTION -->
+<section class="section" id="questions">
+  <div class="container">
+    <div class="section-header">
+      <h2><i class="fa-solid fa-layer-group"></i> Question Bank</h2>
+      <p>Browse by exam category</p>
+    </div>
+
+    <div class="category-tabs">
+      <button class="tab-btn active" data-cat="all"><i class="fa-solid fa-globe"></i> All</button>
+      <button class="tab-btn" data-cat="ssc"><i class="fa-solid fa-graduation-cap"></i> SSC</button>
+      <button class="tab-btn" data-cat="hsc"><i class="fa-solid fa-school"></i> HSC</button>
+      <button class="tab-btn" data-cat="admission"><i class="fa-solid fa-university"></i> Admission</button>
+    </div>
+
+    <div class="search-bar">
+      <i class="fa-solid fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search questions by subject, topic..."/>
+    </div>
+
+    <div class="questions-grid" id="questionsGrid"></div>
+
+    <div class="loading-state" id="loadingState">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <p>Loading questions...</p>
+    </div>
+
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <i class="fa-solid fa-inbox"></i>
+      <h3>No Questions Found</h3>
+      <p>The admin hasn't posted any questions in this category yet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- QUESTION MODAL -->
+<div class="modal-overlay" id="qModal">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-header">
+      <span class="modal-category" id="modalCat"></span>
+      <h2 id="modalTitle"></h2>
+      <div class="modal-meta">
+        <span><i class="fa-solid fa-tag"></i> <span id="modalSubject"></span></span>
+        <span><i class="fa-solid fa-calendar"></i> <span id="modalDate"></span></span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="img-section">
+        <h3><i class="fa-solid fa-circle-question"></i> Question</h3>
+        <img id="modalQImg" src="" alt="Question" loading="lazy"/>
+      </div>
+      <div class="img-section ans-section">
+        <h3><i class="fa-solid fa-circle-check"></i> Answer / Solution</h3>
+        <img id="modalAImg" src="" alt="Answer" loading="lazy"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <i class="fa-solid fa-book-open-reader"></i>
+      <span>CQVai</span>
+      <p>Helping Bangladeshi students succeed in SSC, HSC & University Admission exams.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Categories</h4>
+      <a href="index.html?cat=ssc">SSC</a>
+      <a href="index.html?cat=hsc">HSC</a>
+      <a href="index.html?cat=admission">Admission</a>
+    </div>
+    <div class="footer-links">
+      <h4>Platform</h4>
+      <a href="admin-login.html">Admin Login</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 CQVai. Made with ❤️ for Bangladeshi students.</p>
+  </div>
+</footer>
+
+<script src="app.js" type="module"></script>
+
+<script type="module">
+  let allQuestions = [];
+
+  window.addEventListener("firebaseReady", () => {
+    const db = window._db;
+    const { collection, query, orderBy, onSnapshot } = window._fsModules;
+
+    if (!db) return console.error("Firebase not ready");
+
+    const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snap) => {
+      allQuestions = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      document.getElementById("statQuestions").textContent = allQuestions.length;
+      document.getElementById("loadingState").style.display = "none";
+
+      const activeCat = document.querySelector(".tab-btn.active")?.dataset.cat || "all";
+      filterAndRender(activeCat, document.getElementById("searchInput").value);
+    });
+  });
+
+  function filterAndRender(cat = "all", search = "") {
+    let filtered = allQuestions;
+
+    if (cat !== "all") filtered = filtered.filter(q => q.category === cat);
+
+    if (search.trim()) {
+      const s = search.toLowerCase();
+      filtered = filtered.filter(q =>
+        (q.title || "").toLowerCase().includes(s) ||
+        (q.subject || "").toLowerCase().includes(s) ||
+        (q.topic || "").toLowerCase().includes(s)
+      );
+    }
+
+    renderQuestions(filtered);
+  }
+
+  function renderQuestions(questions) {
+    const grid = document.getElementById("questionsGrid");
+    const empty = document.getElementById("emptyState");
+
+    if (questions.length === 0) {
+      grid.innerHTML = "";
+      empty.style.display = "block";
+      return;
+    }
+
+    empty.style.display = "none";
+
+    grid.innerHTML = questions.map(q => `
+      <div class="q-card" data-id="${q.id}">
+        <img class="q-card-img" src="${q.questionImg}" alt="${q.title}" loading="lazy"/>
+        <div class="q-card-body">
+          <span class="cat-badge ${q.category}">${q.category.toUpperCase()}</span>
+          <h3 class="q-card-title">${q.title || 'Untitled'}</h3>
+          <p class="q-card-sub">${q.subject || ''} ${q.topic ? '• ' + q.topic : ''}</p>
+        </div>
+      </div>
+    `).join("");
+
+    grid.querySelectorAll(".q-card").forEach(card => {
+      card.addEventListener("click", () => openModal(card.dataset.id));
+    });
+  }
+
+  function openModal(id) {
+    const q = allQuestions.find(item => item.id === id);
+    if (!q) return;
+
+    document.getElementById("modalCat").textContent = q.category.toUpperCase();
+    document.getElementById("modalCat").className = `modal-category cat-badge ${q.category}`;
+    document.getElementById("modalTitle").textContent = q.title || 'Untitled';
+    document.getElementById("modalSubject").textContent = q.subject || '';
+    document.getElementById("modalDate").textContent = q.createdAt ? new Date(q.createdAt.seconds * 1000).toLocaleDateString("en-BD") : '';
+
+    document.getElementById("modalQImg").src = q.questionImg;
+    document.getElementById("modalAImg").src = q.answerImg;
+
+    document.getElementById("qModal").classList.add("open");
+  }
+
+  // Close Modal
+  document.getElementById("modalClose").addEventListener("click", () => {
+    document.getElementById("qModal").classList.remove("open");
+  });
+
+  // Search
+  document.getElementById("searchInput").addEventListener("input", (e) => {
+    const activeCat = document.querySelector(".tab-btn.active")?.dataset.cat || "all";
+    filterAndRender(activeCat, e.target.value);
+  });
+
+  // Tabs
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const searchVal = document.getElementById("searchInput").value;
+      filterAndRender(btn.dataset.cat, searchVal);
+    });
+  });
+
+  // Hamburger Menu
+  document.getElementById("hamburger").addEventListener("click", () => {
+    document.getElementById("mobileMenu").classList.toggle("open");
+  });
+</script>
+</body>
+        </html>
